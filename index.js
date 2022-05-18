@@ -15,11 +15,28 @@
         + It should return a string with `name` and `age`. Example: "Mary, 50"
 */
 
-function Person() {
-
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+  this.stomach = [];
 }
 
+Person.prototype.eat = function(edible){
+  if (this.stomach.length < 10) {
+    this.stomach.push(edible);
+  } else {
+    return;
+  }
+}
 
+Person.prototype.poop = function() {
+  this.stomach.splice(0, this.stomach.length);
+}
+
+Person.prototype.toString = function(){
+  return `${this.name}, ${this.age}`;
+}
+ 
 /*
   TASK 2
     - Write a Car constructor that initializes `model` and `milesPerGallon` from arguments.
@@ -36,10 +53,33 @@ function Person() {
         + The `drive` method should return a string "I ran out of fuel at x miles!" x being `odometer`.
 */
 
-function Car() {
-
+function Car(model, mpg) {
+  this.model = model;
+  this.milesPerGallon = mpg;
+  this.tank = 0;
+  this.odometer = 0;
 }
 
+Car.prototype.fill = function(gal) {
+  this.tank += gal;
+}
+
+Car.prototype.drive = function(dist) {
+  if ((dist / this.milesPerGallon) >= this.tank) {
+    this.odometer += this.tank * this.milesPerGallon;
+    this.tank = 0;
+    return `I ran out of fuel at ${this.odometer} miles!`
+  }else{
+    this.tank -= dist /this.milesPerGallon
+    this.odometer += dist;
+  }
+  
+}
+
+const newCar = new Car('ford', 1)
+console.log(newCar.fill(19));
+console.log(newCar.drive(20));
+console.log(newCar.tank);
 
 /*
   TASK 3
@@ -49,18 +89,26 @@ function Car() {
         + Should return a string "Playing with x", x being the favorite toy.
 */
 
-function Baby() {
+function Baby(name, age, toy) {
 
+  Person.call(this, name, age);
+
+  this.favoriteToy = toy;
 }
 
+Baby.prototype = Object.create(Person.prototype);
+
+Baby.prototype.play = function() {
+  return `Playing with ${this.favoriteToy}`
+}
 
 /* 
   TASK 4
   In your own words explain the four principles for the "this" keyword below:
-  1. 
-  2. 
-  3. 
-  4. 
+  1. Window/Global Binding: 'this' is bound to the object that holds javascript in the browser
+  2. Impicit Binding: 'this' is bound to the object to the left of the dot syntax
+  3. Explicit Binding: 'this' is bound to the object we pass as a param in the .call(), .apply(), or .bind()
+  4. New Binding: 'this' is bound to the object created by the constructor that has been called with the new keyword
 */
 
 ///////// END OF CHALLENGE /////////
